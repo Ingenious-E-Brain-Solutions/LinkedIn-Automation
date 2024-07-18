@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Results</title>
+</head>
+<body>
+    <h1>Search Results for "{{ industry }} in {{ country }}"</h1>
+
+    {% if user_message_pairs %}
+        <h2>Potential Buyers:</h2>
+        <form action="{{ url_for('send_messages') }}" method="POST">
+            <ul>
+                {% for user, message in user_message_pairs %}
+                    <li>
+                        <input type="checkbox" id="user_{{ user.urn_id }}" name="user_ids" value="{{ user.urn_id }}">
+                        <label for="user_{{ user.urn_id }}">{{ user.name }} - {{ user.jobtitle }} - {{ message }}</label>
+                        <input type="text" name="messages" value="{{ message }}">
+                        <a href="{{ user.navigationUrl }}" target="_blank">
+                            <button type="button">View Profile on LinkedIn</button>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+            <button type="submit">Send Connection Requests and Messages</button>
+        </form>
+    {% else %}
+        <p>No potential buyers found for "{{ business_idea }}".</p>
+    {% endif %}
+    
+    <br>
+    <a href="{{ url_for('index') }}">Back to Search</a>
+</body>
+</html>

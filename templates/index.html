@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LinkedIn Search</title>
+    <style>
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .container{
+            display: flex;
+            flex-direction: row;
+            /* justify-content: center; */
+        }
+        
+        .dropdown-content {
+            display: block;
+            position: relative;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            padding: 12px 16px;
+            z-index: 1;
+        }
+        
+        .dropdown.show .dropdown-content {
+            display: block;
+        }
+        
+        .dropdown-content input[type="checkbox"] {
+            margin-right: 10px;
+        }
+    </style>
+    <script>
+        function toggleDropdown() {
+            document.getElementById("countryDropdown").classList.toggle("show");
+        }
+        
+        window.onclick = function(event) {
+            if (!event.target.matches('.dropbtn')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                for (var i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+
+        async function handleSubmit(event) {
+            event.preventDefault();
+            
+            const businessIdea = document.getElementById('business_idea').value;
+            const industry = Array.from(document.querySelectorAll('input[name="industry"]:checked')).map(cb => cb.value);
+            const countries = Array.from(document.querySelectorAll('input[name="country"]:checked')).map(cb => cb.value);
+            
+            const data = {
+                business_idea: businessIdea,
+                industry: industry,
+                country: countries
+            };
+
+            try {
+                const response = await fetch('/search', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.status === 'success') {
+                        const url = new URL('/results', window.location.origin);
+                        console.log(url);
+                        window.location.href = url;
+                    } else {
+                        alert('Error occurred!');
+                    }
+                } else {
+                    alert('Error occurred!');
+                }
+            } catch (error) {
+                console.error('Error in POST request:', error);
+                alert('Error occurred!');
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', (event) => {
+            document.getElementById('searchForm').addEventListener('submit', handleSubmit);
+        });
+    </script>
+</head>
+<body>
+    <h1>LinkedIn Search for Potential Buyers</h1>
+    <form id="searchForm">
+        <label for="business_idea">Enter Business Idea:</label>
+        <input type="text" id="business_idea" name="business_idea" required><br><br>
+        <div class="container">
+            <div class="dropdown" id="countryDropdown">
+                <label for="country" class="dropbtn" onclick="toggleDropdown()">Select Countries:</label>
+                <div class="dropdown-content" id="country">
+                    <label><input type="checkbox" name="country" value="103644278">USA</label><br>
+                    <label><input type="checkbox" name="country" value="101174742">Canada</label><br>
+                    <label><input type="checkbox" name="country" value="101165590">UK</label><br>
+                    <label><input type="checkbox" name="country" value="101282230">Germany</label><br>
+                    <label><input type="checkbox" name="country" value="105015875">France</label><br>
+                    <label><input type="checkbox" name="country" value="102713980">India</label><br>
+                    <label><input type="checkbox" name="country" value="101452733">Australia</label><br>
+                    <label><input type="checkbox" name="country" value="101355337">Japan</label><br>
+                    <label><input type="checkbox" name="country" value="102890883">China</label><br>
+                    <label><input type="checkbox" name="country" value="106057199">Brazil</label><br>
+                    <label><input type="checkbox" name="country" value="105646813">Spain</label><br>
+                    <label><input type="checkbox" name="country" value="102454443">Singapore</label><br>
+                    <label><input type="checkbox" name="country" value="103350119">Italy</label><br>
+                    <label><input type="checkbox" name="country" value="106693272">Switzerland</label><br>
+                    <label><input type="checkbox" name="country" value="102890719">Netherlands</label><br>
+                </div>
+            </div><br><br>
+            <div class="dropdown" id="industryDropdown">
+                <label for="industry" class="dropbtn" onclick="toggleDropdown()">Select Industries:</label>
+                <div class="dropdown-content" id="industry">
+                    <label><input type="checkbox" name="industry" value="47">Accounting</label><br>
+                    <label><input type="checkbox" name="industry" value="94">Airlines/Aviation</label><br>
+                    <label><input type="checkbox" name="industry" value="120">Alternative Dispute Resolution</label><br>
+                    <label><input type="checkbox" name="industry" value="125">Alternative Medicine</label><br>
+                    <label><input type="checkbox" name="industry" value="127">Animation</label><br>
+                    <label><input type="checkbox" name="industry" value="19">Apparel & Fashion</label><br>
+                    <label><input type="checkbox" name="industry" value="50">Architecture & Planning</label><br>
+                    <label><input type="checkbox" name="industry" value="111">Arts and Crafts</label><br>
+                    <label><input type="checkbox" name="industry" value="53">Automotive</label><br>
+                    <label><input type="checkbox" name="industry" value="52">Aviation & Aerospace</label><br>
+                    <label><input type="checkbox" name="industry" value="41">Banking</label><br>
+                    <label><input type="checkbox" name="industry" value="12">Biotechnology</label><br>
+                    <label><input type="checkbox" name="industry" value="36">Broadcast Media</label><br>
+                    <label><input type="checkbox" name="industry" value="49">Building Materials</label><br>
+                    <label><input type="checkbox" name="industry" value="138">Business Supplies and Equipment</label><br>
+                    <label><input type="checkbox" name="industry" value="129">Capital Markets</label><br>
+                    <label><input type="checkbox" name="industry" value="54">Chemicals</label><br>
+                    <label><input type="checkbox" name="industry" value="90">Civic & Social Organization</label><br>
+                    <label><input type="checkbox" name="industry" value="51">Civil Engineering</label><br>
+                    <label><input type="checkbox" name="industry" value="128">Commercial Real Estate</label><br>
+                    <label><input type="checkbox" name="industry" value="118">Computer & Network Security</label><br>
+                    <label><input type="checkbox" name="industry" value="109">Computer Games</label><br>
+                    <label><input type="checkbox" name="industry" value="3">Computer Hardware</label><br>
+                    <label><input type="checkbox" name="industry" value="5">Computer Networking</label><br>
+                    <label><input type="checkbox" name="industry" value="4">Software Development</label><br>
+                    <label><input type="checkbox" name="industry" value="48">Construction</label><br>
+                    <label><input type="checkbox" name="industry" value="24">Consumer Electronics</label><br>
+                    <label><input type="checkbox" name="industry" value="25">Consumer Goods</label><br>
+                    <label><input type="checkbox" name="industry" value="91">Consumer Services</label><br>
+                    <label><input type="checkbox" name="industry" value="18">Cosmetics</label><br>
+                    <label><input type="checkbox" name="industry" value="65">Dairy</label><br>
+                    <label><input type="checkbox" name="industry" value="1">Defense & Space</label><br>
+                    <label><input type="checkbox" name="industry" value="99">Design</label><br>
+                    <label><input type="checkbox" name="industry" value="69">Education Management</label><br>
+                    <label><input type="checkbox" name="industry" value="132">E-Learning</label><br>
+                    <label><input type="checkbox" name="industry" value="112">Electrical/Electronic Manufacturing</label>
+                </div>
+            </div>
+        </div>
+        <button id="submit" type="submit">Search</button>
+    </form>
+</body>
+</html>
